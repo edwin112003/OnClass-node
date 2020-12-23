@@ -4,4 +4,4 @@ const router = express.Router();
 router.get('/', (req,res)=>{
     res.render('links/index');
 })
-module.exports = router;
+module.exports = router; 

@@ -22,7 +22,7 @@ app.use(require('./routes'));
 app.use('/links',require('./routes/links'));
 
 //archivos publicos
-app.use(express.static(path.join(__dirname, 'views/links')));
+app.use(express.static(path.join(__dirname, 'public')));
 //inciar servidor
 app.listen(app.get('port'), ()=>{
     console.log('Server en : ', app.get('port')); 
