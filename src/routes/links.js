@@ -1,26 +1,26 @@
 
 const express = require('express');
 const router = express.Router();
-
 const pool = require('../database'); 
 
+ 
 router.get('/index', (req,res)=>{
     res.render('links/index');
 });
 router.get('/login', (req,res)=>{
-    res.render('links/login'); 
+    res.render('links/login', {layout: 'login'}); 
 });
 router.get('/index_login', (req,res)=>{
     res.render('links/index_login'); 
 });
 router.get('/registro', (req,res)=>{
-    res.render('links/registro'); 
+    res.render('links/registro', {layout: 'login'}); 
 }); 
-router.get('/Horario', (req,res)=>{
-    res.render('links/Horario'); 
-});
 router.get('/clase_resto_dia', (req,res)=>{
     res.render('links/clase_resto_dia'); 
+});
+router.get('/Horario', (req,res)=>{
+    res.render('links/Horario'); 
 });
 router.get('/contactos', (req,res)=>{
     res.render('links/contactos'); 
@@ -28,9 +28,51 @@ router.get('/contactos', (req,res)=>{
 router.get('/clase_proyecto', (req,res)=>{
     res.render('links/clase_proyecto'); 
 });
-router.get('/perfil', (req,res)=>{
-    res.render('links/perfil'); 
+
+router.get('/perfil', async (req,res)=>{
+    const perfil = await pool.query('select * from E_Usuario where id_usuario = ?', 61);
+
+    const contactos = await pool.query('call GetCont (?)',11);
+    contactos.pop();
+
+    console.log('pepepepepepe',contactos[0]);
+
+    res.render('links/perfil', {layout: 'login',perfil,usuarios: contactos[0]}); 
 });
+
+router.get('/editar_perfil/:id', async (req,res)=>{
+    const {id} = req.params;
+    console.log(id);
+    const perfil = await pool.query('select * from E_Usuario where id_usuario = ?',[id]);
+    res.render('links/editar_perfil', {perfil: perfil[0]});
+});
+
+router.post('/editar_perfil/:id', async (req,res)=>{
+    const {id} = req.params;
+    console.log('asdasdasdasdasdasdasdasdasdadsasdasd');
+
+    const {usertag, contra, correo_usuario, nombre_usuario} = req.body;     
+    const newlink = {
+        usertag,
+        contra,
+        correo_usuario,
+        nombre_usuario
+    };
+    console.log(newlink);
+
+    await pool.query('call EditUsu(?,?,?,?,?)',
+    [id,
+     newlink.usertag, 
+     newlink.contra,
+     newlink.correo_usuario,
+     newlink.nombre_usuario,
+     newlink.llave_usuario,]);
+    res.redirect('/links/perfil'); 
+});
+
+
+
+
 router.get('/material_clase', (req,res)=>{
     res.render('links/material_clase'); 
 });
@@ -51,5 +93,29 @@ router.get('/proyecto', (req,res)=>{
 });
 router.get('/editar_horario', (req,res)=>{
     res.render('links/editar_horario'); 
+});
+router.get('/ver', async (req,res)=>{
+    const clase = await pool.query('call GetCont(?)',11);
+    clase.pop();
+    res.render('links/ver', {usuarios: clase[0]});
+});
+router.get('/mostrar_cosas', async (req,res)=>{
+    const e_usuario = await pool.query('select * from E_Usuario');
+    res.render('links/mostrar_cosas', {e_usuario});
+
+    
+});
+router.post('/registro', async (req,res)=>{
+    const {usertag, contra, correo_usuario, nombre_usuario, llave_usuario} = req.body;     
+    const newlink = {
+        usertag,
+        contra,
+        correo_usuario,
+        nombre_usuario,
+        llave_usuario
+    };
+    console.log(newlink);
+    await pool.query('call SaveUsu(? ,? ,? ,? ,?)',[newlink.usertag, newlink.contra, newlink.correo_usuario, newlink.nombre_usuario, newlink.llave_usuario]);
+    res.redirect('/links/login');
 });
 module.exports = router;
