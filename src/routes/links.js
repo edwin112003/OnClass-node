@@ -4,8 +4,15 @@ const router = express.Router();
 const pool = require('../database');
 const passport = require('passport');
 const {isLoggedIn}= require('../lib/auth'); 
+var cloudinary = require('cloudinary').v2;
 
- 
+
+cloudinary.config({ 
+    cloud_name: 'dgvhkv4ng', 
+    api_key: '442196388442844', 
+    api_secret: 'AA0SdOf7vslkTGBAK1xaefXei18' 
+  });
+
 router.get('/index', (req,res)=>{
     res.render('links/index');
 });
@@ -108,7 +115,7 @@ router.get('/clase_notas', (req,res)=>{
     res.render('links/clase_notas'); 
 });
 router.get('/clase_tomar_nota', (req,res)=>{
-    res.render('links/clase_tomar_nota'); 
+    res.render('links/clase_tomar_nota', {layout: 'login'}); 
 });
 router.get('/clase_mensajes', (req,res)=>{
     res.render('links/clase_mensajes'); 
@@ -149,6 +156,11 @@ router.post('/registro', async (req,res)=>{
     await pool.query('call SaveUsu(? ,? ,? ,? ,?)',[newlink.usertag, newlink.contra, newlink.correo_usuario, newlink.nombre_usuario, newlink.llave_usuario]);
     res.redirect('/links/login');
 });
-
+/*Req para subir pdf*/
+router.post("/save_pdf",async(req,res)=>{
+    var response ='';
+await cloudinary.uploader.upload("data:image/png;base64,"+req.body.pdf,{format:'jpg', public_id: req.body.nombre}, function(error, result) {console.log(result, error); response = result;});
+res.json({ url: response.url }); 
+});
 
 module.exports = router;
