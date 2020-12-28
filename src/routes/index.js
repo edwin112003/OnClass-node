@@ -2,6 +2,6 @@ const express = require('express');
 const router = express.Router();
 
 router.get('/', (req,res)=>{
-    res.render('links/index');
+    res.render('links/index',{layout: 'login'});
 })
 module.exports = router; 
