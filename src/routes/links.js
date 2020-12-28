@@ -158,9 +158,11 @@ router.post('/registro', async (req,res)=>{
 });
 /*Req para subir pdf*/
 router.post("/save_pdf",async(req,res)=>{
+    var url_mysql = "";
     var response ='';
 await cloudinary.uploader.upload("data:image/png;base64,"+req.body.pdf,{format:'jpg', public_id: req.body.nombre}, function(error, result) {console.log(result, error); response = result;});
 res.json({ url: response.url }); 
 });
-
+/*Esta es la url que se va a meter a la basede datos*/
+url_mysql = response.url;
 module.exports = router;
