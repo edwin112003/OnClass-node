@@ -15,7 +15,8 @@ const { captureRejectionSymbol } = require('events');
 require('./lib/passport');
 
 //configurar el servidor
-app.set('port',8080);
+var port = process.env.PORT || 8080;
+app.set('port', port);
 app.set('views', path.join(__dirname, 'views'));
 app.engine('.hbs', exphbs({
     defaultLayout : 'main',
