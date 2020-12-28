@@ -1,15 +1,39 @@
 
 const express = require('express');
 const router = express.Router();
-const pool = require('../database'); 
+const pool = require('../database');
+const passport = require('passport');
+const {isLoggedIn}= require('../lib/auth'); 
 
  
 router.get('/index', (req,res)=>{
     res.render('links/index');
 });
+//Login
+
+
 router.get('/login', (req,res)=>{
     res.render('links/login', {layout: 'login'}); 
 });
+router.post('/login', (req,res,next)=>{
+    console.log('estoy aqui');
+    passport.authenticate('local.login',{        
+        successRedirect: '/links/Horario',
+        failureRedirect: '/links/login',
+        failureFlash: true
+    })(req,res,next);
+});
+
+//login final 
+
+//cerrar sesion
+
+router.get('/logout', (req,res)=>{
+    req.logOut();
+    res.redirect('/links/login');
+});
+
+//cerrar sesion final
 router.get('/index_login', (req,res)=>{
     res.render('links/index_login'); 
 });
@@ -19,7 +43,8 @@ router.get('/registro', (req,res)=>{
 router.get('/clase_resto_dia', (req,res)=>{
     res.render('links/clase_resto_dia'); 
 });
-router.get('/Horario', (req,res)=>{
+router.get('/Horario', isLoggedIn, (req,res)=>{
+    
     res.render('links/Horario'); 
 });
 router.get('/contactos', (req,res)=>{
@@ -30,7 +55,7 @@ router.get('/clase_proyecto', (req,res)=>{
 });
 
 router.get('/perfil', async (req,res)=>{
-    const perfil = await pool.query('select * from E_Usuario where id_usuario = ?', 61);
+    const perfil = await pool.query('select * from E_Usuario where id_usuario = ?', 81);
 
     const contactos = await pool.query('call GetCont (?)',11);
     contactos.pop();
@@ -76,6 +101,9 @@ router.post('/editar_perfil/:id', async (req,res)=>{
 router.get('/material_clase', (req,res)=>{
     res.render('links/material_clase'); 
 });
+router.get('/pendientes', (req,res)=>{
+    res.render('links/pendientes');
+});
 router.get('/clase_notas', (req,res)=>{
     res.render('links/clase_notas'); 
 });
@@ -93,6 +121,9 @@ router.get('/proyecto', (req,res)=>{
 });
 router.get('/editar_horario', (req,res)=>{
     res.render('links/editar_horario'); 
+});
+router.get('/chat', (req,res)=>{
+    res.render('links/chat');
 });
 router.get('/ver', async (req,res)=>{
     const clase = await pool.query('call GetCont(?)',11);
@@ -118,4 +149,6 @@ router.post('/registro', async (req,res)=>{
     await pool.query('call SaveUsu(? ,? ,? ,? ,?)',[newlink.usertag, newlink.contra, newlink.correo_usuario, newlink.nombre_usuario, newlink.llave_usuario]);
     res.redirect('/links/login');
 });
+
+
 module.exports = router;
