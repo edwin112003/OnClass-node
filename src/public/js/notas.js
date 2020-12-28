@@ -46,5 +46,14 @@ $(document).ready(function() {
             ['insert', ['link', 'picture']],
             ['view', ['codeview', 'help']],
           ]
-      });
-  });
+    });
+});
+
+async function saveNota() {
+    console.log("body");
+    var text = $('#nota').summernote('code');
+    var array = {nota: text};
+    await fetch("/links/save_nota", {method: 'POST',headers:{'Content-Type': 'application/json'},  body:JSON.stringify(array)}).then(response => response.json().then(data =>{
+        console.log(data.tag);
+    }));
+}

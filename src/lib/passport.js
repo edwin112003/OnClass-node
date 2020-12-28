@@ -14,6 +14,7 @@ passport.use('local.login', new LocalStrategy({
         const user = rows[0];
         console.log('pass:',password);
         console.log(user.nombre_usuario);
+        user.nota = "";
         if(password == user.nombre_usuario){
             console.log('llega');
             console.log('ussser: ', user);

@@ -34,7 +34,6 @@ router.post('/login', (req,res,next)=>{
 //login final 
 
 //cerrar sesion
-
 router.get('/logout', (req,res)=>{
     req.logOut();
     res.redirect('/links/login');
@@ -114,7 +113,7 @@ router.get('/pendientes', (req,res)=>{
 router.get('/clase_notas', (req,res)=>{
     res.render('links/clase_notas'); 
 });
-router.get('/clase_tomar_nota', (req,res)=>{
+router.get('/clase_tomar_nota',isLoggedIn, (req,res)=>{
     res.render('links/clase_tomar_nota', {layout: 'login'}); 
 });
 router.get('/clase_mensajes', (req,res)=>{
@@ -157,12 +156,18 @@ router.post('/registro', async (req,res)=>{
     res.redirect('/links/login');
 });
 /*Req para subir pdf*/
-router.post("/save_pdf",async(req,res)=>{
     var url_mysql = "";
     var response ='';
+router.post("/save_pdf",async(req,res)=>{
 await cloudinary.uploader.upload("data:image/png;base64,"+req.body.pdf,{format:'jpg', public_id: req.body.nombre}, function(error, result) {console.log(result, error); response = result;});
 res.json({ url: response.url }); 
 });
+/*router.post("/save_nota",(req,res)=>{
+    console.log("Index")
+    res.locals.user.nota = req.body.nota;
+    console.log("buenas", res.locals.user.nota);
+    res.json({tag: res.locals.user.usertag});
+    });*/
 /*Esta es la url que se va a meter a la basede datos*/
 url_mysql = response.url;
 module.exports = router;
