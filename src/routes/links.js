@@ -1,4 +1,4 @@
-
+//xd
 const express = require('express');
 const router = express.Router();
 const pool = require('../database');
@@ -102,6 +102,16 @@ router.post('/editar_perfil/:id', async (req,res)=>{
 });
 
 
+router.get('/chat_menu', (req,res)=>{
+    res.render('links/chat_menu', {layout: 'login'});
+});
+router.post('/chat_menu', (req,res)=>{
+    console.log('body del chat',req.body);
+    res.redirect('/links/chat');
+});
+router.get('/chat', (req,res)=>{
+    res.render('links/chat', {layout: 'login'});
+});
 
 
 router.get('/material_clase', (req,res)=>{
@@ -127,9 +137,6 @@ router.get('/proyecto', (req,res)=>{
 });
 router.get('/editar_horario', (req,res)=>{
     res.render('links/editar_horario'); 
-});
-router.get('/chat', (req,res)=>{
-    res.render('links/chat');
 });
 router.get('/ver', async (req,res)=>{
     const clase = await pool.query('call GetCont(?)',11);
