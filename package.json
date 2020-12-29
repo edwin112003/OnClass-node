@@ -22,9 +22,11 @@
     "express-session": "^1.17.1",
     "express-validator": "^6.9.0",
     "html2pdf.js": "^0.9.0",
+    "moment": "^2.29.1",
     "mysql": "^2.18.1",
     "nodemon": "^2.0.6",
     "passport": "^0.4.1",
-    "passport-local": "^1.0.0"
+    "passport-local": "^1.0.0",
+    "socket.io": "^3.0.4"
   }
 }

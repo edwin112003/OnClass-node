@@ -1,5 +1,7 @@
 const express = require('express');
 const path = require('path');
+
+
 const exphbs = require('express-handlebars');
 const session = require('express-session');
 const validator = require('express-validator');
@@ -8,6 +10,8 @@ const flash = require('connect-flash');
 const bodyParser = require('body-parser');
 
 const app = express();
+const http = require('http').Server(app);
+const socketio = require('socket.io')(http);
 const router = express.Router();
 
 const { captureRejectionSymbol } = require('events');
@@ -39,6 +43,10 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+
+//socket
+
+
 //globales
 app.use((req,res,next)=>{
     app.locals.user= req.user;
@@ -50,10 +58,13 @@ app.use((req,res,next)=>{
 app.use(require('./routes'));
 app.use('/links',require('./routes/links'));
 
-
+socketio.on('connection', socket =>{
+    console.log('buens nuevosocket');
+});
 //archivos publicos
 
 //inciar servidor
-app.listen(app.get('port'), ()=>{
+http.listen(app.get('port'), ()=>{
     console.log('Server en : ', app.get('port')); 
-}); 
+});
+
