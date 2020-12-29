@@ -5,7 +5,7 @@ const pool = require('../database');
 const passport = require('passport');
 const {isLoggedIn}= require('../lib/auth'); 
 var cloudinary = require('cloudinary').v2;
-
+//buenas
 
 cloudinary.config({ 
     cloud_name: 'dgvhkv4ng', 
