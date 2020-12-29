@@ -1,4 +1,4 @@
-//xd
+
 const express = require('express');
 const router = express.Router();
 const pool = require('../database');
@@ -102,16 +102,6 @@ router.post('/editar_perfil/:id', async (req,res)=>{
 });
 
 
-router.get('/chat_menu', (req,res)=>{
-    res.render('links/chat_menu', {layout: 'login'});
-});
-router.post('/chat_menu', (req,res)=>{
-    console.log('body del chat',req.body);
-    res.redirect('/links/chat');
-});
-router.get('/chat', (req,res)=>{
-    res.render('links/chat', {layout: 'login'});
-});
 
 
 router.get('/material_clase', (req,res)=>{
@@ -135,8 +125,23 @@ router.get('/clase_pendiente', (req,res)=>{
 router.get('/proyecto', (req,res)=>{
     res.render('links/proyecto'); 
 });
-router.get('/editar_horario', (req,res)=>{
+router.get('/editar_horario', (req,res)=>{    
     res.render('links/editar_horario'); 
+});
+router.post('/editar_horario/:id,:case', (req,res)=>{  
+    const id = req.params;  
+    if(id.case==1){
+        console.log("Bienvenido al caso 1 para agregar una clae c:");
+        res.render('links/editar_horario'); 
+    }else{
+        console.log("Caso de editar horario");
+        res.render('links/editar_horario'); 
+    }
+    
+    
+});
+router.get('/chat', (req,res)=>{
+    res.render('links/chat');
 });
 router.get('/ver', async (req,res)=>{
     const clase = await pool.query('call GetCont(?)',11);
